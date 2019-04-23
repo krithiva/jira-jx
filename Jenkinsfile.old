@@ -58,7 +58,15 @@ pipeline {
       }
       steps {
         container('python') {
-         sh "docker run --detach --publish 8080:8080 cptactionhank/atlassian-jira:latest" 
+          dir('./charts/jira') {
+            sh "jx step changelog --version v\$(cat ../../VERSION)"
+
+            // release the helm chart
+            sh "jx step helm release"
+
+            // promote through all 'Auto' promotion Environments
+            sh "jx promote -b --all-auto --timeout 1h --version \$(cat ../../VERSION)"
+          }
         }
       }
     }
