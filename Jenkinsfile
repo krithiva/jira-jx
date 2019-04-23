@@ -49,6 +49,7 @@ pipeline {
           //sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
           sh "docker pull cptactionhank/atlassian-jira"
           sh "docker tag cptactionhank/atlassian-jira $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+          sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
         }
       }
     }
@@ -58,7 +59,7 @@ pipeline {
       }
       steps {
         container('python') {
-         sh "docker run --detach --publish 8080:8080 cptactionhank/atlassian-jira:latest" 
+         sh "docker run --detach --publish 8080:8080 $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)" 
         }
       }
     }
