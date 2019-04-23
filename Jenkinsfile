@@ -46,7 +46,9 @@ pipeline {
           sh "jx step tag --version \$(cat VERSION)"
           sh "python -m unittest"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-          sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+          sh "docker pull cptactionhank/atlassian-jira"
+          sh "docker tag cptactionhank/atlassian-jira $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+          //sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
         }
       }
     }
